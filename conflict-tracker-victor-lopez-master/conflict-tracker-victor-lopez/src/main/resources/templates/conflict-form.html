@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Conflict Tracker - Demo</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ccc; padding: 6px; }
+    </style>
+</head>
+<body>
+<h1>Conflict Tracker - Conflicts</h1>
+<table id="conflicts">
+    <thead><tr><th>ID</th><th>Name</th><th>Start Date</th><th>Status</th><th>Description</th><th>Countries</th></tr></thead>
+    <tbody></tbody>
+</table>
+
+<script>
+    fetch('/api/v1/conflicts')
+      .then(r => r.json())
+      .then(data => {
+        const tbody = document.querySelector('#conflicts tbody');
+        data.forEach(c => {
+          const tr = document.createElement('tr');
+          const countries = (c.countries || []).map(x => x.code).join(', ');
+          tr.innerHTML = `<td>${c.id}</td><td>${c.name}</td><td>${c.startDate||''}</td><td>${c.status||''}</td><td>${(c.description||'').slice(0,100)}</td><td>${countries}</td>`;
+          tbody.appendChild(tr);
+        });
+      }).catch(e => {
+        console.error(e);
+        document.body.insertAdjacentHTML('beforeend', '<p>Error fetching conflicts</p>');
+      });
+</script>
+</body>
+</html>
