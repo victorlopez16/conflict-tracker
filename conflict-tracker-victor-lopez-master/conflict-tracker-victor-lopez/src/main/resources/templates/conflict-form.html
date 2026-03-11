@@ -1,35 +1,198 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
-    <meta charset="utf-8">
-    <title>Conflict Tracker - Demo</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Nou Conflicte — Conflict Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
     <style>
-        table { border-collapse: collapse; width: 100%; }
-        th, td { border: 1px solid #ccc; padding: 6px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f5f5;
+            color: #222;
+            min-height: 100vh;
+        }
+
+        nav {
+            background: #1a1a2e;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        nav .brand {
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        nav .brand span { color: #e94560; }
+
+        nav a {
+            color: #aaa;
+            font-size: 0.85rem;
+            text-decoration: none;
+        }
+
+        nav a:hover { color: #fff; }
+
+        .container {
+            max-width: 600px;
+            margin: 2.5rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .page-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .page-header h1 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            padding: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 1.2rem;
+        }
+
+        label {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #444;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        select,
+        textarea {
+            padding: 0.6rem 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            color: #222;
+            outline: none;
+            transition: border-color 0.15s;
+            width: 100%;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #1a1a2e;
+        }
+
+        input.error, select.error, textarea.error {
+            border-color: #e94560;
+        }
+
+        textarea { resize: vertical; min-height: 90px; }
+
+        .field-error {
+            font-size: 0.78rem;
+            color: #e94560;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+            padding-top: 1.2rem;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.55rem 1.2rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: background 0.15s;
+        }
+
+        .btn-primary { background: #e94560; color: #fff; }
+        .btn-primary:hover { background: #c73652; }
+
+        .btn-secondary { background: #eee; color: #444; }
+        .btn-secondary:hover { background: #ddd; }
     </style>
 </head>
 <body>
-<h1>Conflict Tracker - Conflicts</h1>
-<table id="conflicts">
-    <thead><tr><th>ID</th><th>Name</th><th>Start Date</th><th>Status</th><th>Description</th><th>Countries</th></tr></thead>
-    <tbody></tbody>
-</table>
 
-<script>
-    fetch('/api/v1/conflicts')
-      .then(r => r.json())
-      .then(data => {
-        const tbody = document.querySelector('#conflicts tbody');
-        data.forEach(c => {
-          const tr = document.createElement('tr');
-          const countries = (c.countries || []).map(x => x.code).join(', ');
-          tr.innerHTML = `<td>${c.id}</td><td>${c.name}</td><td>${c.startDate||''}</td><td>${c.status||''}</td><td>${(c.description||'').slice(0,100)}</td><td>${countries}</td>`;
-          tbody.appendChild(tr);
-        });
-      }).catch(e => {
-        console.error(e);
-        document.body.insertAdjacentHTML('beforeend', '<p>Error fetching conflicts</p>');
-      });
-</script>
+<nav>
+    <span class="brand">Conflict<span>Tracker</span></span>
+    <a th:href="@{/web/conflicts}">← Tornar al llistat</a>
+</nav>
+
+<div class="container">
+    <div class="page-header">
+        <h1>Nou Conflicte</h1>
+    </div>
+
+    <div class="card">
+        <form th:action="@{/web/conflicts/save}" th:object="${conflict}" method="post" novalidate>
+
+            <div class="form-group">
+                <label for="name">Nom *</label>
+                <input type="text" id="name"
+                       th:field="*{name}"
+                       th:classappend="${#fields.hasErrors('name')} ? 'error'"
+                       placeholder="Nom del conflicte"/>
+                <span class="field-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="startDate">Data d'Inici *</label>
+                <input type="date" id="startDate"
+                       th:field="*{startDate}"
+                       th:classappend="${#fields.hasErrors('startDate')} ? 'error'"/>
+                <span class="field-error" th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="status">Estat *</label>
+                <select id="status"
+                        th:field="*{status}"
+                        th:classappend="${#fields.hasErrors('status')} ? 'error'">
+                    <option value="">— Selecciona —</option>
+                    <option value="ACTIVE">ACTIVE</option>
+                    <option value="FROZEN">FROZEN</option>
+                    <option value="ENDED">ENDED</option>
+                </select>
+                <span class="field-error" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Descripció</label>
+                <textarea id="description"
+                          th:field="*{description}"
+                          placeholder="Descripció breu..."></textarea>
+            </div>
+
+            <div class="form-actions">
+                <a th:href="@{/web/conflicts}" class="btn btn-secondary">Cancel·lar</a>
+                <button type="submit" class="btn btn-primary">Desar</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
 </body>
 </html>

@@ -11,13 +11,13 @@ Instruccions d'ús: Instal·lació
 Exemples d'ús:
 
 - Obtenir tots els conflictes:
-  GET http://localhost:8080/conflicts
+  GET http://localhost:8080/web/conflicts
 
 - Obtenir un conflicte per ID:
   GET http://localhost:8080/conflicts/{id}
 
 - Crear un nou conflicte:
-  POST http://localhost:8080/api/v1/conflicts
+  POST http://localhost:8080/web/conflicts/new
   Body (JSON):
   {
     "name": "Guerra de Ucraïna",
