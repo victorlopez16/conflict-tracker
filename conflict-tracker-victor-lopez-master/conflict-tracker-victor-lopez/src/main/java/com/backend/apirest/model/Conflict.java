@@ -25,6 +25,9 @@ public class Conflict {
     @Column(length = 2000)
     private String description;
 
+    @Column
+    private String region;
+
     @ManyToMany
     @JoinTable(
             name = "conflict_country",
@@ -33,7 +36,6 @@ public class Conflict {
     )
     private Set<com.backend.apirest.model.entity.Country> countries = new HashSet<>();
 
-    // getters/setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getName() { return name; }
@@ -44,6 +46,8 @@ public class Conflict {
     public void setStatus(ConflictStatus status) { this.status = status; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+    public String getRegion() { return region; }
+    public void setRegion(String region) { this.region = region; }
     public Set<com.backend.apirest.model.entity.Country> getCountries() { return countries; }
     public void setCountries(Set<com.backend.apirest.model.entity.Country> countries) { this.countries = countries; }
 }

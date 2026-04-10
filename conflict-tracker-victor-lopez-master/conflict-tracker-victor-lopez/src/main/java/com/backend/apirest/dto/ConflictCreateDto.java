@@ -8,7 +8,17 @@ public class ConflictCreateDto {
     private LocalDate startDate;
     private String status;
     private String description;
-    private List<String> countryCodes; // list of codes like "UKR"
+    private String region;
+    private List<CountryInput> countries;
+
+    public static class CountryInput {
+        private String name;
+        private String code;
+        public String getName() { return name; }
+        public void setName(String name) { this.name = name; }
+        public String getCode() { return code; }
+        public void setCode(String code) { this.code = code; }
+    }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
@@ -18,6 +28,8 @@ public class ConflictCreateDto {
     public void setStatus(String status) { this.status = status; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
-    public List<String> getCountryCodes() { return countryCodes; }
-    public void setCountryCodes(List<String> countryCodes) { this.countryCodes = countryCodes; }
+    public String getRegion() { return region; }
+    public void setRegion(String region) { this.region = region; }
+    public List<CountryInput> getCountries() { return countries; }
+    public void setCountries(List<CountryInput> countries) { this.countries = countries; }
 }

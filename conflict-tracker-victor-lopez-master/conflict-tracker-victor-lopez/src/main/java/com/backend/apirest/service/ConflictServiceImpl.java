@@ -9,7 +9,6 @@ import com.backend.apirest.model.entity.Country;
 import com.backend.apirest.model.ConflictStatus;
 import com.backend.apirest.repository.ConflictRepository;
 import com.backend.apirest.repository.CountryRepository;
-import com.backend.apirest.service.ConflictService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -54,24 +53,24 @@ public class ConflictServiceImpl implements ConflictService {
         Conflict c = new Conflict();
         c.setName(dto.getName());
         c.setStartDate(dto.getStartDate());
+        c.setDescription(dto.getDescription());
+        c.setRegion(dto.getRegion());
         if (dto.getStatus() != null) {
             try { c.setStatus(ConflictStatus.valueOf(dto.getStatus().toUpperCase())); } catch (Exception ignored) {}
         }
-        c.setDescription(dto.getDescription());
-        if (dto.getCountryCodes() != null) {
-            Set<Country> countries = dto.getCountryCodes().stream()
-                    .map(code -> countryRepository.findByCode(code)
+        if (dto.getCountries() != null) {
+            Set<Country> countries = dto.getCountries().stream()
+                    .map(input -> countryRepository.findByCode(input.getCode())
                             .orElseGet(() -> {
                                 Country nc = new Country();
-                                nc.setCode(code);
-                                nc.setName(code);
+                                nc.setCode(input.getCode());
+                                nc.setName(input.getName());
                                 return countryRepository.save(nc);
                             }))
                     .collect(Collectors.toSet());
             c.setCountries(countries);
         }
-        Conflict saved = conflictRepository.save(c);
-        return ConflictMapper.toDto(saved);
+        return ConflictMapper.toDto(conflictRepository.save(c));
     }
 
     @Override

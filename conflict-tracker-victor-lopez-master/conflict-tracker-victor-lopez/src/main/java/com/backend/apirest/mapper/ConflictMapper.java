@@ -19,6 +19,7 @@ public class ConflictMapper {
         dto.setStartDate(c.getStartDate());
         dto.setStatus(c.getStatus() != null ? c.getStatus().name() : null);
         dto.setDescription(c.getDescription());
+        dto.setRegion(c.getRegion());
         if (c.getCountries() != null) {
             List<CountryDto> countries = c.getCountries().stream().map(ConflictMapper::countryToDto).collect(Collectors.toList());
             dto.setCountries(countries);

@@ -9,6 +9,7 @@ public class ConflictDto {
     private LocalDate startDate;
     private String status;
     private String description;
+    private String region;
     private List<CountryDto> countries;
 
     public Long getId() { return id; }
@@ -21,6 +22,8 @@ public class ConflictDto {
     public void setStatus(String status) { this.status = status; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+    public String getRegion() { return region; }
+    public void setRegion(String region) { this.region = region; }
     public List<CountryDto> getCountries() { return countries; }
     public void setCountries(List<CountryDto> countries) { this.countries = countries; }
 }

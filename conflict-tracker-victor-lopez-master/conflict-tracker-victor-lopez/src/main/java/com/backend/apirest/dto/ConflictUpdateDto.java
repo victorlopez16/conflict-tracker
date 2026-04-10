@@ -8,6 +8,7 @@ public class ConflictUpdateDto {
     private LocalDate startDate;
     private String status;
     private String description;
+    private String region;
     private List<String> countryCodes;
 
     public String getName() { return name; }
@@ -18,6 +19,8 @@ public class ConflictUpdateDto {
     public void setStatus(String status) { this.status = status; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+    public String getRegion() { return region; }
+    public void setRegion(String region) { this.region = region; }
     public List<String> getCountryCodes() { return countryCodes; }
     public void setCountryCodes(List<String> countryCodes) { this.countryCodes = countryCodes; }
 }
