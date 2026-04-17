@@ -1,47 +1,13 @@
 spring:
-  application:
-    name: apirest
-  profiles:
-    active: dev # Por defecto usará H2 en local
-
----
-# CONFIGURACIÓN PARA DESARROLLO (LOCAL)
-spring:
-  config:
-    activate:
-      on-profile: dev
   datasource:
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
-    defer-datasource-initialization: true
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-
----
-# CONFIGURACIÓN PARA PRODUCCIÓN (SUPABASE / CLOUD)
-spring:
-  config:
-    activate:
-      on-profile: prod
-  datasource:
-    # Usamos las variables que te pide el profesor
-    url: ${DB_URL}
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      # Cambiado a 'update' para que Hibernate cree las tablas en Supabase por ti la primera vez
-      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: false
