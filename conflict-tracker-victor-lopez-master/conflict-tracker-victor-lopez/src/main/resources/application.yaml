@@ -2,9 +2,10 @@ spring:
   application:
     name: apirest
   profiles:
-    active: dev
+    active: dev # Por defecto usará H2 en local
 
 ---
+# CONFIGURACIÓN PARA DESARROLLO (LOCAL)
 spring:
   config:
     activate:
@@ -12,7 +13,7 @@ spring:
   datasource:
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driver-class-name: org.h2.Driver
-    username: jose
+    username: sa
     password:
   jpa:
     hibernate:
@@ -25,15 +26,22 @@ spring:
       path: /h2-console
 
 ---
+# CONFIGURACIÓN PARA PRODUCCIÓN (SUPABASE / CLOUD)
 spring:
   config:
     activate:
       on-profile: prod
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/conflictdb}
+    # Usamos las variables que te pide el profesor
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
-    username: ${SPRING_DATASOURCE_USERNAME:youruser}
-    password: ${SPRING_DATASOURCE_PASSWORD:yourpass}
   jpa:
     hibernate:
-      ddl-auto: validate
+      # Cambiado a 'update' para que Hibernate cree las tablas en Supabase por ti la primera vez
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
