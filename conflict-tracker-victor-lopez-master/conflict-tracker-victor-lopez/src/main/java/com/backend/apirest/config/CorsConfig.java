@@ -13,8 +13,10 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
-                        .allowedOrigins("https://conflict-tracker-frontend-eight.vercel.app/")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE");
+                        .allowedOrigins("https://conflict-tracker-frontend-eight.vercel.app") // Sin barra al final
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
             }
         };
     }
