@@ -24,7 +24,6 @@ public class ConflictWebController {
         this.conflictService = conflictService;
     }
 
-    // Convertir String buit a null i String a ConflictStatus enum
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
@@ -44,13 +43,15 @@ public class ConflictWebController {
     @GetMapping
     public String listConflicts(Model model) {
         model.addAttribute("conflicts", conflictService.findAll(null));
-        return "conflicts-list";
+        // CORRECCIÓN: Debe coincidir con conflict-list.html
+        return "conflict-list";
     }
 
     // GET /web/conflicts/new → formulari buit
     @GetMapping("/new")
     public String showForm(Model model) {
         model.addAttribute("conflict", new Conflict());
+        // Coincide con conflict-form.html
         return "conflict-form";
     }
 
@@ -60,7 +61,6 @@ public class ConflictWebController {
             @ModelAttribute("conflict") Conflict conflict,
             BindingResult bindingResult) {
 
-        // Validació manual
         if (conflict.getName() == null || conflict.getName().isBlank()) {
             bindingResult.addError(new FieldError("conflict", "name", "El nom és obligatori"));
         }
@@ -71,12 +71,10 @@ public class ConflictWebController {
             bindingResult.addError(new FieldError("conflict", "status", "L'estat és obligatori"));
         }
 
-        // Si hi ha errors, tornar al formulari amb els missatges
         if (bindingResult.hasErrors()) {
             return "conflict-form";
         }
 
-        // Construir DTO i cridar servei
         ConflictCreateDto dto = new ConflictCreateDto();
         dto.setName(conflict.getName().trim());
         dto.setStartDate(conflict.getStartDate());
@@ -85,7 +83,6 @@ public class ConflictWebController {
 
         conflictService.create(dto);
 
-        // Redirigir al llistat després d'èxit
         return "redirect:/web/conflicts";
     }
 }
